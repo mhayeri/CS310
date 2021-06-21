@@ -3,7 +3,7 @@ package data_structures.prog_4;
 import java.util.Iterator;
 import java.util.ConcurrentModificationException;
 
-public class HashTable<K extends Comparable<K>, V extends Comparable<V>> implements DictionaryADT<K, V> {
+public class Hashtable<K extends Comparable<K>, V extends Comparable<V>> implements DictionaryADT<K, V> {
     private LinearList<DictionaryNode<K, V>>[] list;
     private int currSize, tableSize, maxSize, modCounter;
 
@@ -21,7 +21,7 @@ public class HashTable<K extends Comparable<K>, V extends Comparable<V>> impleme
         }
     }
 
-    public HashTable(int n) {
+    public Hashtable(int n) {
         currSize = 0;
         maxSize = n;
         modCounter = 0;
@@ -31,25 +31,11 @@ public class HashTable<K extends Comparable<K>, V extends Comparable<V>> impleme
             list[i] = new LinearList<>();
     }
 
-    /**
-     * 
-     * @param key
-     * @return boolean Returns true if the dictionary has an object identified by
-     *         the key in it, otherwise false.
-     */
     public boolean contains(K key) {
         DictionaryNode<K, V> tmp = new DictionaryNode<>(key, null);
         return list[getIndex(key)].contains(tmp);
     }
 
-    /**
-     * 
-     * @param key
-     * @param value
-     * @return boolean Adds the given key/value pair to the dictionary. Returns
-     *         false if the dictionary is full, or if the key is a duplicate.
-     *         Returns true if the addition succeeded.
-     */
     public boolean add(K k, V v) {
         if (isFull())
             return false;
@@ -63,13 +49,6 @@ public class HashTable<K extends Comparable<K>, V extends Comparable<V>> impleme
         return true;
     }
 
-    /**
-     * 
-     * @param key
-     * @return boolean Deletes the key/value pair identified by the key parameter.
-     *         Returns true if the key/value pair was found and removed, otherwise
-     *         false.
-     */
     public boolean delete(K key) {
         if (contains(key)) {
             DictionaryNode<K, V> tmp = new DictionaryNode<>(key, null);
@@ -81,12 +60,6 @@ public class HashTable<K extends Comparable<K>, V extends Comparable<V>> impleme
         return false;
     }
 
-    /**
-     * 
-     * @param key
-     * @return V Returns the value associated with the parameter key. Returns null
-     *         if the key is not found or the dictionary is empty.
-     */
     public V getValue(K key) {
         int index = getIndex(key);
         DictionaryNode<K, V> tmp = list[index].find(new DictionaryNode<>(key, null));
@@ -95,13 +68,6 @@ public class HashTable<K extends Comparable<K>, V extends Comparable<V>> impleme
         return tmp.value;
     }
 
-    /**
-     * 
-     * @param value
-     * @return K Returns the key associated with the parameter value. Returns null
-     *         if the value is not found in the dictionary. If more than one key
-     *         exists that matches the given value, returns the first one found.
-     */
     public K getKey(V value) {
         for (int i = 0; i < tableSize; i++) {
             for (DictionaryNode<K, V> tmp : list[i]) {
@@ -112,34 +78,18 @@ public class HashTable<K extends Comparable<K>, V extends Comparable<V>> impleme
         return null;
     }
 
-    /**
-     * 
-     * @return int Returns the number of key/value pairs currently stored in the
-     *         dictionary.
-     */
     public int size() {
         return currSize;
     }
 
-    /**
-     * 
-     * @return boolean Returns true if the dictionary is at max capacity.
-     */
     public boolean isFull() {
         return currSize == maxSize;
     }
 
-    /**
-     * 
-     * @return boolean Returns true if the dictionary is empty.
-     */
     public boolean isEmpty() {
         return currSize == 0;
     }
 
-    /**
-     * Returns the Dictionary object to an empty state
-     */
     public void clear() {
         for (int i = 0; i < tableSize; i++)
             list[i].clear();
@@ -147,21 +97,10 @@ public class HashTable<K extends Comparable<K>, V extends Comparable<V>> impleme
         modCounter = 0;
     }
 
-    /**
-     * 
-     * @return Iterator Returns an iterator of the keys in the dictionary, in
-     *         ascending sorted order. The iterator must be fail-fast.
-     */
     public Iterator<K> keys() {
         return new KeyIteratorHelper<>();
     }
 
-    /**
-     * 
-     * @return Iterator Returns an Iterator of the values in the dictionary, The
-     *         order of the values must match the order of the keys. The iterator
-     *         must be fail-fast.
-     */
     public Iterator<V> values() {
         return new ValueIteratorHelper<>();
     }
